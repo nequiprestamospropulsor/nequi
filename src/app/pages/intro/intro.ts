@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Header } from '../../shared/header/header';
-import { Footer } from '../../shared/footer/footer';
 
 @Component({
   selector: 'app-intro',
-  imports: [Header, Footer],
+  imports: [],
   templateUrl: './intro.html',
 })
 export class Intro {
