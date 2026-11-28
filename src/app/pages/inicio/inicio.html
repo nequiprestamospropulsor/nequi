@@ -1,0 +1,150 @@
+<div class="bg-white text-purple-primary min-h-screen flex flex-col">
+
+  <app-header />
+
+  <main class="flex-1 w-full flex flex-col items-center">
+    <section class="w-full max-w-[420px] app-card">
+
+      <img class="hero-img" src="assets/banner.png" alt="Ilustración de una persona revisando su crédito">
+
+      <div class="px-4 py-6">
+        <h1 class="text-3xl font-bold text-purple-primary mb-4">Solicita tu crédito</h1>
+
+        <h2 class="text-lg font-semibold text-pink-primary mb-2">Datos personales</h2>
+
+        <form (submit)="enviar($event)" novalidate>
+          <div class="flex items-center gap-2 w-full h-11 px-4 rounded-lg border bg-white"
+            [class.border-gray-300]="!errorCedula()" [class.border-red-500]="errorCedula()">
+            <svg class="w-6 h-6 text-pink-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <circle cx="8" cy="11" r="2"></circle>
+              <path d="M5 16.5c0-1.5 1.4-2.5 3-2.5s3 1 3 2.5"></path>
+              <line x1="14" y1="10" x2="18" y2="10"></line>
+              <line x1="14" y1="14" x2="18" y2="14"></line>
+            </svg>
+            <input type="text" inputmode="numeric" maxlength="10" autocomplete="off" aria-label="Ingresa tu cédula"
+              placeholder="Ingresa tu cédula" [value]="cedula()" (input)="escribirCedula($any($event.target).value)"
+              class="flex-1 h-full bg-transparent text-purple-primary focus:outline-none">
+          </div>
+
+          @if (errorCedula()) {
+          <small class="block text-xs text-red-500 mt-2">
+            La cédula debe tener entre 7 y 10 dígitos.
+          </small>
+          }
+
+          <p class="text-sm text-gray-secondary mt-3 mb-4">
+            Para conocer tu <span class="text-pink-primary font-semibold">cupo preaprobado</span>,
+            ingresa tu número de documento
+          </p>
+
+          <button type="submit"
+            class="w-full h-12 mt-5 rounded-full bg-pink-primary text-white font-bold cursor-pointer transition-colors hover:bg-[#c1007a] focus:outline-none">
+            Solicitar
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <app-footer />
+</div>
+
+<!-- Modal: resumen del crédito -->
+@if (modalAbierto()) {
+<div id="modal" class="fixed inset-0 z-[1000] flex items-center justify-center px-4" (click)="cerrar()">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="tituloModal"
+    (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2 id="tituloModal">Resumen de tu crédito</h2>
+      <button class="modal-cerrar" aria-label="Cerrar" (click)="cerrar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Tarjeta rosa: monto -->
+      <div class="monto-card">
+        <label for="monto">¿Cuánta plata necesitas?</label>
+        <p class="monto-valor">{{ montoTexto() }}</p>
+        <input id="monto" type="range" min="100000" max="6700000" step="100000" [value]="monto()"
+          (input)="cambiarMonto($any($event.target).value)" [style.background]="barra()" class="slider-blanco">
+        <div class="monto-rango">
+          <span>$100 mil</span>
+          <span>$6.7 M</span>
+        </div>
+      </div>
+
+      <!-- Tarjeta gris: detalles -->
+      <div class="detalle-card">
+        <div class="detalle-fila">
+          <label for="plazo">Plazo:</label>
+          <select id="plazo" class="plazo-select" (change)="cambiarPlazo($any($event.target).value)">
+            <option value="6">6 meses</option>
+            <option value="12">12 meses</option>
+            <option value="18">18 meses</option>
+            <option value="24" selected>24 meses</option>
+            <option value="36">36 meses</option>
+            <option value="48">48 meses</option>
+          </select>
+        </div>
+        <div class="detalle-fila">
+          <span>Fecha de pago:</span>
+          <strong>1 de cada mes</strong>
+        </div>
+        <div class="detalle-fila">
+          <span>Cuota mensual:</span>
+          <strong class="cuota-valor">{{ cuotaTexto() }}</strong>
+        </div>
+        <div class="detalle-fila">
+          <span>Tasa de interés:</span>
+          <strong>{{ tasaTexto() }}</strong>
+        </div>
+        <p class="detalle-nota">Incluye préstamo (capital), seguro e intereses.</p>
+      </div>
+
+      <!-- Check de autorización -->
+      <label class="autorizo">
+        <input type="checkbox" class="check-rosa" [checked]="autorizado()"
+          (change)="autorizado.set($any($event.target).checked)">
+        <span>
+          <strong class="text-pink-primary">Autorizo</strong> a asdasda sas. para que me contacte vía telefónica
+          con fines comerciales, incluyendo la promoción y ofrecimiento de productos y servicios financieros.
+          Te invitamos a conocer más sobre la
+          <a href="#" class="link-rosa">Política para el Tratamiento de Datos Personales</a>.
+        </span>
+      </label>
+    </div>
+
+    <!-- Zona fija del botón -->
+    <div class="modal-footer">
+      <button class="boton-confirmar disabled:opacity-50 disabled:cursor-not-allowed" [disabled]="!autorizado()"
+        (click)="continuar()">
+        Confirmar y continuar
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Loader de cubos + "Listo" -->
+@if (cargando()) {
+<div class="loading-spinner">
+  <div class="cubes-text">
+    <div class="cubes-loader">
+      <div class="cube"></div>
+      <div class="cube"></div>
+    </div>
+    <p class="text-cube">Procesando la información.</p>
+    <div class="done" [class.show]="listo()">
+      <div class="check"></div>
+      Listo
+    </div>
+  </div>
+</div>
+}

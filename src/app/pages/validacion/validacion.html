@@ -1,0 +1,197 @@
+<div class="bg-white text-purple-primary min-h-screen flex flex-col">
+
+  <app-header />
+
+  <main class="flex-1 w-full flex flex-col items-center">
+    <section class="w-full max-w-[420px] app-card">
+
+      <img class="banner-img" src="assets/imagen-mujer.png" alt="Persona usando la app">
+
+      <div class="px-4 py-6">
+        <h1 class="text-3xl font-bold text-purple-primary mb-4">Validación de identidad</h1>
+
+        <h2 class="text-lg font-semibold text-pink-primary mb-4">Verifica tus datos</h2>
+
+        <form (submit)="validar($event)" novalidate>
+
+          <!-- Nombres y apellidos completos -->
+          <div class="mb-4">
+            <label for="nombre" class="block font-medium text-purple-primary mb-2">Nombres y apellidos completos</label>
+            <div class="campo" [class.error]="errorNombre()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path>
+              </svg>
+              <input id="nombre" type="text" autocomplete="off" placeholder="Escribe tu nombre completo"
+                [value]="nombre()" (input)="nombre.set($any($event.target).value); limpiar()">
+            </div>
+            @if (errorNombre()) {
+            <small class="block text-xs text-red-500 mt-2">
+              Escribe tus nombres y apellidos completos (solo letras).
+            </small>
+            }
+          </div>
+
+          <!-- Tipo de documento -->
+          <div class="mb-4">
+            <label for="tipoDoc" class="block font-medium text-purple-primary mb-2">Tipo de documento</label>
+            <div class="campo" [class.error]="errorTipo()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <circle cx="8" cy="11" r="2"></circle>
+                <path d="M5 16.5c0-1.5 1.4-2.5 3-2.5s3 1 3 2.5"></path>
+                <line x1="14" y1="10" x2="18" y2="10"></line>
+                <line x1="14" y1="14" x2="18" y2="14"></line>
+              </svg>
+              <select id="tipoDoc" (change)="tipoDoc.set($any($event.target).value); limpiar()">
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option>Cédula de ciudadanía</option>
+                <option>Cédula de extranjería</option>
+                <option>Pasaporte</option>
+                <option>Tarjeta de identidad</option>
+              </select>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            @if (errorTipo()) {
+            <small class="block text-xs text-red-500 mt-2">Selecciona un tipo de documento.</small>
+            }
+          </div>
+
+          <!-- Número de documento -->
+          <div class="mb-4">
+            <label for="numDoc" class="block font-medium text-purple-primary mb-2">Número de documento</label>
+            <div class="campo" [class.error]="errorDoc()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <circle cx="8" cy="11" r="2"></circle>
+                <path d="M5 16.5c0-1.5 1.4-2.5 3-2.5s3 1 3 2.5"></path>
+                <line x1="14" y1="10" x2="18" y2="10"></line>
+                <line x1="14" y1="14" x2="18" y2="14"></line>
+              </svg>
+              <input id="numDoc" type="text" inputmode="numeric" maxlength="10" autocomplete="off"
+                placeholder="Escribe tu número de documento" [value]="doc()" (input)="onDoc($event)">
+            </div>
+            @if (errorDoc()) {
+            <small class="block text-xs text-red-500 mt-2">
+              El documento debe tener entre 7 y 10 dígitos.
+            </small>
+            }
+          </div>
+
+          <!-- Teléfono -->
+          <div class="mb-4">
+            <label for="telefono" class="block font-medium text-purple-primary mb-2">Teléfono</label>
+            <div class="campo" [class.error]="errorTelefono()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path
+                  d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+                </path>
+              </svg>
+              <input id="telefono" type="tel" inputmode="numeric" maxlength="10" autocomplete="off"
+                placeholder="3001234567" [value]="telefono()" (input)="onTelefono($event)">
+            </div>
+            @if (errorTelefono()) {
+            <small class="block text-xs text-red-500 mt-2">
+              Escribe un celular válido de 10 dígitos que empiece por 3.
+            </small>
+            }
+          </div>
+
+          <!-- Correo electrónico -->
+          <div class="mb-4">
+            <label for="correo" class="block font-medium text-purple-primary mb-2">Correo electrónico</label>
+            <div class="campo" [class.error]="errorCorreo()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                <path d="M3 7l9 6 9-6"></path>
+              </svg>
+              <input id="correo" type="email" autocomplete="off" placeholder="correo@ejemplo.com (ficticio)"
+                [value]="correo()" (input)="correo.set($any($event.target).value); limpiar()">
+            </div>
+            @if (errorCorreo()) {
+            <small class="block text-xs text-red-500 mt-2">Escribe un correo válido.</small>
+            }
+          </div>
+
+          <!-- Saldo Disponible -->
+          <div class="mb-4">
+            <label for="saldo" class="block font-medium text-purple-primary mb-2">Saldo Disponible</label>
+            <div class="campo" [class.error]="errorSaldo()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 1v22"></path>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+              <input id="saldo" type="text" inputmode="decimal" autocomplete="off" placeholder="$0" [value]="saldo()"
+                (input)="onSaldo($event)">
+            </div>
+            @if (errorSaldo()) {
+            <small class="block text-xs text-red-500 mt-2">
+              Escribe un saldo válido, por ejemplo $1.500.000.
+            </small>
+            }
+          </div>
+
+          <!-- Comprobante -->
+          <div class="mb-4">
+            <span class="block font-medium text-purple-primary mb-2">Adjuntar comprobante</span>
+            <div class="campo" [class.error]="errorArchivo()">
+              <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path
+                  d="M21.4 11.1l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5">
+                </path>
+              </svg>
+
+              <!-- Input nativo oculto (sigue siendo accesible por teclado) -->
+              <input id="comprobante" class="sr-only" type="file" accept=".pdf,image/jpeg,image/png,image/webp"
+                (change)="onArchivo($event)">
+
+              <!-- Texto visible que reemplaza el mensaje por defecto -->
+              <label for="comprobante" class="archivo-texto" [class.con-archivo]="archivo()">
+                {{ archivo() ? archivo()!.name : 'Selecciona un archivo' }}
+              </label>
+            </div>
+            @if (errorArchivo()) {
+            <small class="block text-xs text-red-500 mt-2">{{ mensajeArchivo() }}</small>
+            } @else {
+            <small class="block text-xs mt-2">Formatos permitidos: PDF o imagen (máx. 5 MB).</small>
+            }
+          </div>
+
+          <button type="submit"
+            class="w-full h-12 mt-6 rounded-full bg-pink-primary text-white font-bold cursor-pointer transition-colors hover:bg-[#c1007a] focus:outline-none">
+            Validar información
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <app-footer />
+</div>
+
+<!-- Loader de cubos + "Listo" -->
+@if (cargando()) {
+<div class="loading-spinner">
+  <div class="cubes-text">
+    <div class="cubes-loader">
+      <div class="cube"></div>
+      <div class="cube"></div>
+    </div>
+    <p class="text-cube">Validando tu información…</p>
+    <div class="done" [class.show]="listo()">
+      <div class="check"></div>
+      Listo
+    </div>
+  </div>
+</div>
+}

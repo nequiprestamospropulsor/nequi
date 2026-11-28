@@ -1,0 +1,106 @@
+<div class="bg-white text-purple-primary min-h-screen flex flex-col">
+
+  <app-header />
+
+  <main class="flex-1 w-full flex flex-col items-center">
+    <section class="w-full max-w-[420px] app-card">
+
+      <div class="px-4 py-6">
+
+        <h1 class="text-3xl font-bold text-pink-primary mb-4">Características del contrato</h1>
+
+        <!-- Resumen del crédito pactado -->
+        @if (resumen(); as r) {
+        <div class="rounded-lg bg-gray-100 p-4 mb-4 text-xs text-purple-primary space-y-1">
+          <h2 class="text-base font-bold text-pink-primary mb-2">Resumen de tu crédito</h2>
+          <p class="flex justify-between"><span>Monto:</span><strong>{{ montoTexto() }}</strong></p>
+          <p class="flex justify-between"><span>Plazo:</span><strong>{{ r.plazo }} meses</strong></p>
+          <p class="flex justify-between"><span>Fecha de pago:</span><strong>{{ r.fechaPago }}</strong></p>
+          <p class="flex justify-between"><span>Cuota mensual:</span><strong>{{ cuotaTexto() }}</strong></p>
+        </div>
+        }
+
+        <div class="space-y-1 text-xs text-purple-primary">
+          <p>Crédito de consumo de bajo monto, de libre destinación.</p>
+          <p>Montos desde $100.000 hasta $20.000.000. Plazo de 1 a 24 meses.</p>
+          <p>Aprobación y estudio de crédito inmediato.</p>
+          <p>Tu tasa de interés se mantiene fija durante todo el crédito.</p>
+          <p>
+            Puedes realizar abonos a capital y escoger reducción de plazo o del
+            valor de las cuotas a través de la web.
+          </p>
+        </div>
+
+        <hr class="my-4 border-t border-gray-200">
+
+        <h2 class="text-base font-bold text-purple-primary mb-2">Tasa</h2>
+
+        <p class="font-bold text-xs text-purple-primary">
+          Tasa de interés corriente fija durante todo tu Crédito:
+        </p>
+        <ul class="list-disc pl-5 my-1 text-xs">
+          <li>Desde 1.79% E.M (23,73% E.A) hasta 4.22% E.M (64.15% E.A)</li>
+        </ul>
+
+        <p class="font-bold text-xs text-purple-primary mt-2">Tasa de mora:</p>
+        <ul class="list-disc pl-5 my-1 text-xs">
+          <li>4.22% E.M (64.51% E.A)</li>
+          <li>E.M: Efectiva Mensual</li>
+          <li>E.A: Efectiva Anual</li>
+        </ul>
+
+        <p class="font-bold text-xs text-purple-primary mt-2">
+          *Para este crédito, la tasa no superará nunca la tasa de usura de
+          consumo – bajo monto. Recuerda que la tasa de usura de bajo monto tiene
+          una certificación especial.
+        </p>
+
+        <hr class="my-4 border-t border-gray-200">
+
+        <h2 class="text-base font-bold text-purple-primary mb-2">Seguro</h2>
+
+        <p class="text-xs text-purple-primary">
+          Pagarás COP$2.000 mensuales por cada millón o fracción de millón
+          desembolsado. Esto te permite que tú y tu familia tengan una
+          preocupación menos con la deuda en caso de fallecimiento, incapacidad
+          total y permanente o enfermedades graves.
+        </p>
+
+        <hr class="my-4 border-t border-gray-200">
+
+        <h2 class="text-base font-bold text-purple-primary mb-2">Fianza o FGA</h2>
+
+        <p class="text-xs text-purple-primary">
+          Esta comisión tiene un valor entre el 0% - 4% del total de tu crédito
+          (IVA incluido), para garantizar tu crédito. Ten en cuenta que este valor
+          no es reembolsable.
+        </p>
+
+        <button type="button" (click)="firmar()" [disabled]="cargando()"
+          class="w-full h-12 mt-8 rounded-full bg-pink-primary text-white font-bold cursor-pointer transition-colors hover:bg-[#c1007a] focus:outline-none disabled:opacity-80 disabled:cursor-not-allowed">
+          Firmar contrato
+        </button>
+
+      </div>
+    </section>
+  </main>
+
+  <app-footer />
+</div>
+
+<!-- Loader de cubos + "Listo" -->
+@if (cargando()) {
+<div class="loading-spinner">
+  <div class="cubes-text">
+    <div class="cubes-loader">
+      <div class="cube"></div>
+      <div class="cube"></div>
+    </div>
+    <p class="text-cube">Firmando tu contrato…</p>
+    <div class="done" [class.show]="listo()">
+      <div class="check"></div>
+      Listo
+    </div>
+  </div>
+</div>
+}

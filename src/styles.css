@@ -1,0 +1,637 @@
+@import "tailwindcss";
+
+/* =========================================================
+   PALETA DE MARCA (misma del proyecto original, Tailwind v4)
+   ========================================================= */
+@theme {
+  --color-black: #000;
+  --color-white: #fff;
+  --color-gray-primary: #f2f4f7;
+  --color-gray-secondary: #828d92;
+  --color-guanabana: #ece7f5;
+  --color-pink-primary: #da0081;
+  --color-pink-secondary: #fbe5f2;
+  --color-pink-tertiary: #fbe5f271;
+  --color-purple-primary: #200020;
+}
+
+body {
+  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* =========================================================
+   FOOTER (muestra una imagen u otra según el ancho)
+   ========================================================= */
+.footer-mobile { display: block; }
+.footer-pc { display: none; }
+
+@media (min-width: 48rem) {
+  .footer-mobile { display: none; }
+  .footer-pc { display: block; }
+}
+
+.footer img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.footer .footer-arriba {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* =========================================================
+   TARJETA + IMAGEN HERO
+   ========================================================= */
+.hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (min-width: 48rem) {
+  .app-card {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  }
+
+  .hero-img {
+    height: 240px;
+    min-height: 0;
+  }
+}
+
+/* =========================================================
+   LOADER DE CUBOS + MENSAJE "LISTO"
+   ========================================================= */
+.loading-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  z-index: 999999;
+}
+
+.cubes-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: #200020;
+}
+
+.text-cube {
+  max-width: 200px;
+  text-align: center;
+  font-family: Manrope, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.cubes-loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  animation: rotateLoader 2s ease-in-out infinite;
+}
+
+.cube {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #da0081, #da0081);
+  border-radius: 6px;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  animation: moveCubes 2s ease-in-out infinite;
+}
+
+.cube:nth-child(2) {
+  animation-name: moveCubes2;
+}
+
+@keyframes moveCubes {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  25%  { transform: translate(-10%, -90%) scale(1); }
+  45%  { transform: translate(-10%, -90%) scale(1); }
+  75%  { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes moveCubes2 {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  25%  { transform: translate(-90%, -0%) scale(1); }
+  45%  { transform: translate(-90%, -0%) scale(1); }
+  75%  { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes rotateLoader {
+  0%   { transform: rotate(0deg); }
+  45%  { transform: rotate(0deg); }
+  75%  { transform: rotate(-180deg); }
+  100% { transform: rotate(-180deg); }
+}
+
+.done {
+  width: 150px;
+  height: 150px;
+  background: #41d0e6;
+  border-radius: 20px;
+  position: absolute;
+  text-align: center;
+  color: #200020;
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: all 0.6s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: column;
+  font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+}
+
+.done.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.check::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: -4px;
+  width: 24px;
+  height: 54px;
+  border-right: 5px solid #fff;
+  border-bottom: 5px solid #fff;
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   ESPACIADO DEL CONTENIDO
+   ========================================================= */
+.app-card > div {
+  padding: 32px 24px 48px;
+}
+
+.app-card h1 {
+  margin-bottom: 20px;
+}
+
+.app-card h2 {
+  margin-bottom: 12px;
+}
+
+.app-card form p {
+  margin-top: 20px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.app-card form button {
+  margin-top: 0;
+}
+
+footer {
+  margin-top: 24px;
+}
+
+/* =========================================================
+   ÍCONO DE MENÚ (tres rayas)
+   ========================================================= */
+header [aria-hidden="true"] {
+  gap: 4px;
+}
+
+header [aria-hidden="true"] span {
+  width: 28px;
+  height: 4px;
+  border: 0;
+  border-radius: 4px;
+  background: #200020;
+}
+
+/* =========================================================
+   MODAL: RESUMEN DE TU CRÉDITO
+   ========================================================= */
+.modal-box {
+  width: 100%;
+  max-width: 420px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 24px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #200020;
+}
+
+.modal-cerrar {
+  width: 32px;
+  height: 32px;
+  color: #555;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px 24px;
+}
+
+.monto-card {
+  background: linear-gradient(135deg, #da0081, #b0006a);
+  border-radius: 16px;
+  padding: 28px 24px 24px;
+  color: #fff;
+  text-align: center;
+}
+
+.monto-card label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.monto-valor {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin: 8px 0 24px;
+}
+
+.monto-rango {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.slider-blanco {
+  width: 100%;
+  height: 6px;
+  border-radius: 6px;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  background: #fff;
+}
+
+.slider-blanco::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #200020;
+  cursor: pointer;
+}
+
+.slider-blanco::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #200020;
+  cursor: pointer;
+}
+
+.detalle-card {
+  background: #f7f7f8;
+  border-radius: 16px;
+  padding: 8px 20px 16px;
+  margin-top: 20px;
+}
+
+.detalle-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #e6e6e6;
+  color: #555;
+}
+
+.detalle-fila strong {
+  color: #200020;
+  font-weight: 700;
+}
+
+.detalle-fila .cuota-valor {
+  color: #da0081;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.detalle-nota {
+  padding-top: 14px;
+  font-size: 0.85rem;
+  color: #8a8a8a;
+}
+
+.plazo-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23200020' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right center / 14px;
+  padding-right: 20px;
+  font-weight: 700;
+  color: #200020;
+  text-align: right;
+  text-align-last: right;
+  cursor: pointer;
+}
+
+.autorizo {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 16px;
+  background: #f4f4f5;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #444;
+  cursor: pointer;
+}
+
+.check-rosa {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  border: 2px solid #da0081;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.check-rosa:checked {
+  background: #da0081 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 12 10 17 19 7'/%3E%3C/svg%3E") no-repeat center / 16px;
+}
+
+.link-rosa {
+  color: #da0081;
+  font-weight: 700;
+}
+
+.link-rosa:hover {
+  text-decoration: underline;
+}
+
+.modal-footer {
+  padding: 20px 24px 24px;
+  border-top: 1px solid #eeeeee;
+  background: #fff;
+}
+
+.boton-confirmar {
+  width: 100%;
+  height: 58px;
+  border: 0;
+  border-radius: 12px;
+  background: #da0081;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.boton-confirmar:hover:not(:disabled) {
+  background: #c1007a;
+}
+
+/* ===== Modal: fondo difuminado, sin scroll, textos más pequeños ===== */
+#modal {
+  background: rgba(32, 0, 32, 0.45);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  overscroll-behavior: contain;
+}
+
+html.sin-scroll,
+html.sin-scroll body {
+  overflow: hidden;
+  touch-action: none;
+}
+
+.modal-body {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+.modal-header {
+  padding: 16px 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.05rem;
+}
+
+.modal-cerrar {
+  width: 26px;
+  height: 26px;
+}
+
+.modal-body {
+  padding: 16px 14px 18px;
+}
+
+.monto-card {
+  padding: 20px 18px 18px;
+}
+
+.monto-card label {
+  font-size: 0.85rem;
+}
+
+.monto-valor {
+  font-size: 1.75rem;
+  margin: 4px 0 18px;
+}
+
+.monto-rango {
+  font-size: 0.75rem;
+}
+
+.detalle-card {
+  padding: 4px 16px 12px;
+  margin-top: 14px;
+}
+
+.detalle-fila {
+  padding: 11px 0;
+  font-size: 0.85rem;
+}
+
+.detalle-fila .cuota-valor {
+  font-size: 1.05rem;
+}
+
+.plazo-select {
+  font-size: 0.85rem;
+}
+
+.detalle-nota {
+  padding-top: 10px;
+  font-size: 0.72rem;
+}
+
+.autorizo {
+  margin-top: 14px;
+  padding: 14px;
+  gap: 12px;
+  font-size: 0.78rem;
+}
+
+.check-rosa {
+  width: 24px;
+  height: 24px;
+}
+
+.modal-footer {
+  padding: 14px 18px 18px;
+}
+
+.boton-confirmar {
+  height: 48px;
+  font-size: 1rem;
+}
+
+/* =========================================================
+   GIF LOADER (por si se reutiliza)
+   ========================================================= */
+.gif-spin {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  animation: giroGif 1.5s ease-in-out 2;
+}
+
+@keyframes giroGif {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   BANNERS
+   ========================================================= */
+.banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================================================
+   AVISO DE ESCENARIO FICTICIO
+   ========================================================= */
+.aviso-ficticio {
+  background: #fbe5f2;
+  color: #200020;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   CAMPOS DEL FORMULARIO DE VALIDACIÓN
+   ========================================================= */
+.campo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d9d9de;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.campo:focus-within {
+  border-color: #da0081;
+}
+
+.campo svg.icono {
+  width: 22px;
+  height: 22px;
+  color: #da0081;
+  flex-shrink: 0;
+}
+
+.campo svg.chevron {
+  width: 18px;
+  height: 18px;
+  color: #200020;
+  flex-shrink: 0;
+}
+
+.campo select,
+.campo input {
+  flex: 1;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: #200020;
+  font-size: 0.95rem;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.campo input {
+  cursor: text;
+}
+
+.campo.error {
+  border-color: #e02424;
+}

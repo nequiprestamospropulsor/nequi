@@ -1,0 +1,28 @@
+<section class="screen">
+
+  <!-- Header: ícono de ayuda (izq) + tu marca en pequeño (der) -->
+  <header class="top">
+    <div class="help" aria-hidden="true">?</div>
+    <img class="brand-mini" src="assets/sublogo.svg">
+  </header>
+
+  <!-- Cuerpo: logo centrado + formulario de celular -->
+  <main>
+    <div class="brand">
+      <img src="assets/logo-color.svg" alt="Mi marca">
+    </div>
+
+    <div class="form-wrap">
+      <form (submit)="entrar($event)" novalidate>
+        <div class="field">
+          <div class="prefix"><span>+57</span></div>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ingresa tu cel"
+            autocomplete="tel" maxlength="12" aria-label="Número de celular"
+            [value]="telefono()" (input)="escribir($any($event.target).value)">
+        </div>
+
+        <button type="submit" class="btn" [disabled]="!valido()">Entra</button>
+      </form>
+    </div>
+  </main>
+</section>
