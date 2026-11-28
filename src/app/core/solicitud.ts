@@ -26,8 +26,7 @@ export interface DatosValidacion {
   telefono: string;
   correo: string;
   saldo: number;
-  // El archivo en sí no se guarda (sessionStorage solo guarda texto)
-  comprobante: { tipo: string; tamano: number };
+  comprobante: { nombre: string; tipo: string; tamano: number; base64: string };
 }
 
 // PASO 1 para agregar una sección: crea su interfaz aquí arriba.

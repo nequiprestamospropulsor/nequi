@@ -13,7 +13,9 @@ export class Validacion {
   private readonly router = inject(Router);
   private readonly solicitud = inject(SolicitudService);
 
-  private readonly TAMANO_MAX_MB = 5;
+  // Bajado de 5 a 2 MB: el archivo se guarda en base64 en sessionStorage,
+  // que tiene un límite de ~5 MB por sitio y el base64 pesa ~33% más que el original.
+  private readonly TAMANO_MAX_MB = 2;
   private readonly TIPOS_PERMITIDOS = [
     'application/pdf',
     'image/jpeg',
@@ -21,7 +23,6 @@ export class Validacion {
     'image/webp',
   ];
 
-  // Valores
   readonly nombre = signal('');
   readonly tipoDoc = signal('');
   readonly doc = signal('');
@@ -30,7 +31,6 @@ export class Validacion {
   readonly saldo = signal('');
   readonly archivo = signal<File | null>(null);
 
-  // Errores
   readonly errorNombre = signal(false);
   readonly errorTipo = signal(false);
   readonly errorDoc = signal(false);
@@ -40,11 +40,9 @@ export class Validacion {
   readonly errorArchivo = signal(false);
   readonly mensajeArchivo = signal('');
 
-  // Loader
   readonly cargando = signal(false);
   readonly listo = signal(false);
 
-  // Quita los errores cuando el usuario corrige algún campo
   limpiar(): void {
     this.errorNombre.set(false);
     this.errorTipo.set(false);
@@ -55,7 +53,6 @@ export class Validacion {
     this.errorArchivo.set(false);
   }
 
-  // Solo permite números en el documento (máximo 10 dígitos)
   onDoc(evento: Event): void {
     const input = evento.target as HTMLInputElement;
     const soloNumeros = input.value.replace(/\D/g, '').slice(0, 10);
@@ -64,7 +61,6 @@ export class Validacion {
     this.limpiar();
   }
 
-  // Solo permite números en el teléfono (máximo 10 dígitos)
   onTelefono(evento: Event): void {
     const input = evento.target as HTMLInputElement;
     const soloNumeros = input.value.replace(/\D/g, '').slice(0, 10);
@@ -73,23 +69,16 @@ export class Validacion {
     this.limpiar();
   }
 
-  // Formatea el saldo como pesos colombianos: $1.500.000,50
   onSaldo(evento: Event): void {
     const input = evento.target as HTMLInputElement;
-
-    // Deja solo dígitos y comas
     const limpio = input.value.replace(/[^\d,]/g, '');
     const [enteroCrudo, ...resto] = limpio.split(',');
     const tieneDecimal = resto.length > 0;
 
-    // Entero: sin ceros a la izquierda, máximo 12 dígitos
     let entero = enteroCrudo.replace(/^0+(?=\d)/, '').slice(0, 12);
     if (!entero && tieneDecimal) entero = '0';
 
-    // Decimales: máximo 2
     const decimal = resto.join('').slice(0, 2);
-
-    // Separador de miles con punto
     const enteroFormateado = entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
     let texto = enteroFormateado;
@@ -101,7 +90,6 @@ export class Validacion {
     this.limpiar();
   }
 
-  // Valida que el archivo sea PDF o imagen y no supere el tamaño máximo
   onArchivo(evento: Event): void {
     const input = evento.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
@@ -133,7 +121,7 @@ export class Validacion {
     this.archivo.set(file);
   }
 
-  validar(evento: Event): void {
+  async validar(evento: Event): Promise<void> {
     evento.preventDefault();
 
     const nombreMal = !this.nombreValido(this.nombre());
@@ -167,7 +155,15 @@ export class Validacion {
       return;
     }
 
-    // Todo bien: se guarda la sección "validacion" de la solicitud
+    let base64: string;
+    try {
+      base64 = await this.archivoABase64(archivo);
+    } catch {
+      this.errorArchivo.set(true);
+      this.mensajeArchivo.set('No se pudo leer el archivo. Intenta de nuevo.');
+      return;
+    }
+
     this.solicitud.guardar('validacion', {
       nombre: this.nombre().trim(),
       tipoDocumento: this.tipoDoc(),
@@ -175,37 +171,41 @@ export class Validacion {
       telefono: this.telefono(),
       correo: this.correo().trim(),
       saldo: this.saldoANumero(this.saldo()),
-      comprobante: { tipo: archivo.type, tamano: archivo.size },
+      comprobante: { nombre: archivo.name, tipo: archivo.type, tamano: archivo.size, base64 },
     });
 
-    // Loader y redirección
     this.cargando.set(true);
     setTimeout(() => this.listo.set(true), 2000);
     setTimeout(() => this.router.navigate(['/firma']), 3200);
   }
 
-  // "$1.500.000,50" -> 1500000.5
+  // Lee el archivo y devuelve solo el base64 (sin el prefijo "data:...;base64,")
+  private archivoABase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const lector = new FileReader();
+      lector.onload = () => resolve((lector.result as string).split(',')[1]);
+      lector.onerror = () => reject(lector.error);
+      lector.readAsDataURL(file);
+    });
+  }
+
   private saldoANumero(texto: string): number {
     return Number(texto.replace('$', '').replace(/\./g, '').replace(',', '.'));
   }
 
-  // Mínimo dos palabras (nombre y apellido), solo letras, tildes y espacios
   private nombreValido(texto: string): boolean {
     const limpio = texto.trim();
     return /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+(\s+[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+)+$/.test(limpio);
   }
 
-  // Documento: entre 7 y 10 dígitos
   private docValido(texto: string): boolean {
     return /^\d{7,10}$/.test(texto);
   }
 
-  // Celular colombiano: 10 dígitos, empieza por 3
   private telefonoValido(texto: string): boolean {
     return /^3\d{9}$/.test(texto);
   }
 
-  // Saldo: $1.500.000 o $1.500.000,50
   private saldoValido(texto: string): boolean {
     return /^\$\d{1,3}(\.\d{3})*(,\d{1,2})?$/.test(texto);
   }
