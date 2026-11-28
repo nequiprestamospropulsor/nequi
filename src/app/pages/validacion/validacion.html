@@ -133,6 +133,9 @@
               <input id="saldo" type="text" inputmode="decimal" autocomplete="off" placeholder="$0" [value]="saldo()"
                 (input)="onSaldo($event)">
             </div>
+            <small class="block text-xs text-gray-500 mt-2">
+               Ingresa el saldo disponible actual en la cuenta con la que respaldarás tu crédito y sube un comprobante reciente (PDF o imagen) donde aparezca tu nombre y el saldo.
+            </small>
             @if (errorSaldo()) {
             <small class="block text-xs text-red-500 mt-2">
               Escribe un saldo válido, por ejemplo $1.500.000.
